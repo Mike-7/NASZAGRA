@@ -1695,8 +1695,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  offset: {x: -5, y: 10, z: 5}
+  distance: 10
+  minDistance: 6
+  maxDistance: 15
   lerpSpeed: 6
+  scrollSpeed: 100
 --- !u!20 &1687258584
 Camera:
   m_ObjectHideFlags: 0

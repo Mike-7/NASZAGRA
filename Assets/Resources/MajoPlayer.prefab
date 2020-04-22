@@ -272,7 +272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dcf239f3feaff7499b8ef0bd151fc28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  smokePrefab: {fileID: 6553015911767433603, guid: a3777a01383084b47b4cb6557d3abd36,
+  smokePrefab: {fileID: 1821158616718314243, guid: 6b009352eb72f6c40892e0d2505b9193,
     type: 3}
   speakerPrefab: {fileID: 8984755865512627264, guid: eabdfa43951e50c4f8a8e631b61b48be,
     type: 3}

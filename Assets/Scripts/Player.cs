@@ -25,6 +25,9 @@ public class Player : MonoBehaviour
     public float attack3Cooldown = 30;
     public float attack3TimeStamp = 0;
 
+    public float smokeDamageCooldown = 1;
+    public float smokeDamageTimestamp = 0;
+
     CharacterController characterController;
     Animator animator;
 
@@ -84,20 +87,27 @@ public class Player : MonoBehaviour
 
     public void Attack1(InputAction.CallbackContext context)
     {
-        if(Time.time - attack1TimeStamp >= attack1Cooldown)
+        if(context.canceled)
+        {
+            return;
+        }
+
+        if(Time.time - attack1TimeStamp >= attack1Cooldown || true)
         {
             attack1TimeStamp = Time.time;
             Vector3 rotation = new Vector3(smokePrefab.transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
-            Vector3 offset = new Vector3(0, 2, 0);
+            Vector3 offset = new Vector3(0, 3, 0) + transform.forward * 1.5f;
 
 #if UNITY_EDITOR
             if(!PhotonNetwork.InRoom)
             {
-                Instantiate(smokePrefab, transform.position + offset, Quaternion.Euler(rotation));
+                var smokeEmitterOffline = Instantiate(smokePrefab, transform.position + offset, Quaternion.Euler(rotation));
+                smokeEmitterOffline.transform.SetParent(transform, true);
                 return;
             }
 #endif
-            PhotonNetwork.Instantiate(smokePrefab.name, transform.position + offset, Quaternion.Euler(rotation));
+            var smokeEmitter = PhotonNetwork.Instantiate(smokePrefab.name, transform.position + offset, Quaternion.Euler(rotation));
+            smokeEmitter.transform.SetParent(transform, true);
         }
     }
 
@@ -145,6 +155,16 @@ public class Player : MonoBehaviour
         catch
         {
             health = 0;
+        }
+    }
+
+    void OnParticleCollision(GameObject other)
+    {
+        if(Time.time - smokeDamageTimestamp >= smokeDamageCooldown)
+        {
+            smokeDamageTimestamp = Time.time;
+
+            TakeDamage(5);
         }
     }
 }

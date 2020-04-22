@@ -12,6 +12,8 @@ public class Player : MonoBehaviour
     public GameObject speakerPrefab;
     public GameObject toilerPrefab;
 
+    public bool isPlayable = false;
+
     public float speed = 8f;
     public float rotationSpeed = 5f;
     public uint health = 100;
@@ -27,6 +29,8 @@ public class Player : MonoBehaviour
 
     public float smokeDamageCooldown = 1;
     public float smokeDamageTimestamp = 0;
+
+    public ParticleSystem smokeParticle;
 
     CharacterController characterController;
     Animator animator;
@@ -44,6 +48,11 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if(!isPlayable)
+        {
+            return;
+        }
+
         rotation = GetRotationTowardsMouse();
 
         animator.SetBool("walking", moveDir != Vector3.zero);
@@ -51,6 +60,11 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+        if(!isPlayable)
+        {
+            return;
+        }
+
         characterController.Move(moveDir * speed * Time.deltaTime);
         transform.position = new Vector3(transform.position.x, 0, transform.position.z);
         transform.localRotation = Quaternion.Lerp(transform.localRotation,
@@ -85,6 +99,12 @@ public class Player : MonoBehaviour
         moveDir = TranslateMoveVector2D(move2D);
     }
 
+    [PunRPC]
+    void EmitSmoke()
+    {
+        smokeParticle.Play();
+    }
+
     public void Attack1(InputAction.CallbackContext context)
     {
         if(context.canceled)
@@ -92,22 +112,19 @@ public class Player : MonoBehaviour
             return;
         }
 
-        if(Time.time - attack1TimeStamp >= attack1Cooldown || true)
+        if(Time.time - attack1TimeStamp >= attack1Cooldown)
         {
             attack1TimeStamp = Time.time;
-            Vector3 rotation = new Vector3(smokePrefab.transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
-            Vector3 offset = new Vector3(0, 3, 0) + transform.forward * 1.5f;
 
 #if UNITY_EDITOR
             if(!PhotonNetwork.InRoom)
             {
-                var smokeEmitterOffline = Instantiate(smokePrefab, transform.position + offset, Quaternion.Euler(rotation));
-                smokeEmitterOffline.transform.SetParent(transform, true);
+                EmitSmoke();
                 return;
             }
 #endif
-            var smokeEmitter = PhotonNetwork.Instantiate(smokePrefab.name, transform.position + offset, Quaternion.Euler(rotation));
-            smokeEmitter.transform.SetParent(transform, true);
+            PhotonView photonView = PhotonView.Get(this);
+            photonView.RPC("EmitSmoke", RpcTarget.All);
         }
     }
 
@@ -160,11 +177,22 @@ public class Player : MonoBehaviour
 
     void OnParticleCollision(GameObject other)
     {
-        if(Time.time - smokeDamageTimestamp >= smokeDamageCooldown)
+        if(!isPlayable)
+        {
+            return;
+        }
+
+        // Check if player owns particle system
+        if (other.transform.parent == transform)
+        {
+            return;
+        }
+
+        if (Time.time - smokeDamageTimestamp >= smokeDamageCooldown)
         {
             smokeDamageTimestamp = Time.time;
 
-            TakeDamage(5);
+            TakeDamage(10);
         }
     }
 }

@@ -17,16 +17,17 @@ public class Options : MonoBehaviour
     int currentDisplay;
 
     public TMP_Dropdown qualityDropdown;
-
     public Slider volumeSlider;
-
     public TMP_InputField nickNameInputField;
+
+    string currentNickName;
 
     void Start()
     {
-        nickNameInputField.text = networkManager.GetNickName();
+        currentNickName = networkManager.GetNickName();
+        nickNameInputField.text = currentNickName;
 
-        if(PlayerPrefs.HasKey(NaszaGra.VOLUME_KEY))
+        if (PlayerPrefs.HasKey(NaszaGra.VOLUME_KEY))
         {
             AudioListener.volume = PlayerPrefs.GetFloat(NaszaGra.VOLUME_KEY);
             volumeSlider.value = AudioListener.volume;
@@ -75,9 +76,9 @@ public class Options : MonoBehaviour
         qualityDropdown.value = QualitySettings.GetQualityLevel();
     }
 
-    void ShowRestartButton(bool visible = true)
+    void ShowRestartButton()
     {
-        restartButton.gameObject.SetActive(visible);
+        restartButton.gameObject.SetActive(true);
     }
 
     public void OnNickNameChange()
@@ -88,7 +89,10 @@ public class Options : MonoBehaviour
         }
 
         networkManager.SaveNickName(nickNameInputField.text);
-        Restart();
+        if (nickNameInputField.text != currentNickName)
+        {
+            ShowRestartButton();
+        }
     }
 
     public void OnResolutionChange()
@@ -110,12 +114,6 @@ public class Options : MonoBehaviour
 
     public void OnDisplayChange()
     {
-        if(displayDropdown.value == currentDisplay)
-        {
-            ShowRestartButton(false);
-            return;
-        }
-
         PlayerPrefs.SetInt("UnitySelectMonitor", displayDropdown.value);
         ShowRestartButton();
     }

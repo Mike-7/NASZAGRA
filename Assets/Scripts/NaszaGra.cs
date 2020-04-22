@@ -11,6 +11,10 @@ public class NaszaGra
 
     public const string VOLUME_KEY = "Volume";
 
+    public const string AD_URL = "AdUrl";
+    public const string AD_IMAGE_URL = "AdImageUrl";
+    public const string AD_TEXT = "AdText";
+
     // Player's custom properties (Photon Network)
     public const string CHARACTER_ID = "CharacterID";
 }

@@ -6,6 +6,7 @@ using Photon.Pun;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(DamageAnimation))]
 public class Player : MonoBehaviour
 {
     public GameObject smokePrefab;
@@ -16,7 +17,7 @@ public class Player : MonoBehaviour
 
     public float speed = 8f;
     public float rotationSpeed = 5f;
-    public uint health = 100;
+    public int health = 100;
 
     public float attack1Cooldown = 3;
     public float attack1TimeStamp = 0;
@@ -27,13 +28,14 @@ public class Player : MonoBehaviour
     public float attack3Cooldown = 30;
     public float attack3TimeStamp = 0;
 
-    public float smokeDamageCooldown = 1;
+    public float smokeDamageCooldown = 0.5f;
     public float smokeDamageTimestamp = 0;
 
     public ParticleSystem smokeParticle;
 
     CharacterController characterController;
     Animator animator;
+    DamageAnimation damageAnimation;
 
     Vector3 moveDir = Vector3.zero;
     Quaternion rotation;
@@ -42,6 +44,7 @@ public class Player : MonoBehaviour
     {
         characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
+        damageAnimation = GetComponent<DamageAnimation>();
 
         rotation = Quaternion.Euler(0, 0, 0);
     }
@@ -163,16 +166,54 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void TakeDamage(uint damageValue)
+    [PunRPC]
+    public void DestroyPlayer()
     {
-        try
+        Destroy(gameObject);
+    }
+
+    void Die()
+    {
+        PlayersManager._instance.StartCoroutine(
+            PlayersManager._instance.Respawn(
+                (int)PhotonNetwork.LocalPlayer.CustomProperties[NaszaGra.TEAM_ID]));
+
+#if UNITY_EDITOR
+        if(!PhotonNetwork.InRoom)
         {
-            health = checked(health - damageValue);
+            DestroyPlayer();
+            return;
         }
-        catch
+#endif
+
+        PhotonView photonView = PhotonView.Get(this);
+        photonView.RPC("DestroyPlayer", RpcTarget.All);
+    }
+
+    [PunRPC]
+    public void PlayDamageAnimation()
+    {
+        damageAnimation.OnDamage();
+    }
+
+    public void TakeDamage(int damageValue)
+    {
+        health -= damageValue;
+        if (health <= 0)
         {
-            health = 0;
+            Die();
         }
+
+#if UNITY_EDITOR
+        if (!PhotonNetwork.InRoom)
+        {
+            PlayDamageAnimation();
+            return;
+        }
+#endif
+
+        PhotonView photonView = PhotonView.Get(this);
+        photonView.RPC("PlayDamageAnimation", RpcTarget.All);
     }
 
     void OnParticleCollision(GameObject other)
@@ -191,7 +232,6 @@ public class Player : MonoBehaviour
         if (Time.time - smokeDamageTimestamp >= smokeDamageCooldown)
         {
             smokeDamageTimestamp = Time.time;
-
             TakeDamage(10);
         }
     }

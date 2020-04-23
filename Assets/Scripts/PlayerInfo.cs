@@ -13,6 +13,8 @@ public class PlayerInfo : MonoBehaviour
     {
         if(player == null)
         {
+            playerInfoText.text = "Zginales";
+
             return;
         }
 

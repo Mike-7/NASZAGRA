@@ -195,6 +195,7 @@ GameObject:
   - component: {fileID: 5149223427267822354}
   - component: {fileID: 5149223427267822353}
   - component: {fileID: 5149223427267822366}
+  - component: {fileID: 5265468342530240626}
   - component: {fileID: 3067185014317253754}
   - component: {fileID: 5149223427267822365}
   - component: {fileID: 5149223427267822364}
@@ -289,9 +290,24 @@ MonoBehaviour:
   attack2TimeStamp: 0
   attack3Cooldown: 30
   attack3TimeStamp: 0
-  smokeDamageCooldown: 1
+  smokeDamageCooldown: 0.5
   smokeDamageTimestamp: 0
   smokeParticle: {fileID: 2829726267472747480}
+--- !u!114 &5265468342530240626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3770738270420621854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8dd27ab47a5d0e4399686e8ee83be69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meshRenderer: {fileID: 2664265038879764162}
+  damageColor: {r: 2, g: 0, b: 0, a: 1}
+  lerpSpeed: 5
 --- !u!114 &3067185014317253754
 MonoBehaviour:
   m_ObjectHideFlags: 0

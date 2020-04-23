@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
+using TMPro;
 
 public class SlotsManager : MonoBehaviourPunCallbacks
 {
     public Menu menu;
     public GameObject slotsContainer;
     public GameObject slotPrefab;
+    public TMP_Dropdown teamDropdown;
 
     List<GameObject> slots;
 
@@ -31,6 +33,9 @@ public class SlotsManager : MonoBehaviourPunCallbacks
                 slot.Select((int)playerList[i].CustomProperties[NaszaGra.CHARACTER_ID]);
             }
         }
+
+        // Select "Zabawa" team
+        SelectTeam(0);
     }
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
@@ -148,5 +153,20 @@ public class SlotsManager : MonoBehaviourPunCallbacks
 
         Slot slot = GetSlot(PhotonNetwork.LocalPlayer.ActorNumber);
         slot.Select((int)characterID);
+    }
+
+    void SelectTeam(int teamID)
+    {
+        Hashtable props = new Hashtable
+        {
+            { NaszaGra.TEAM_ID, teamID }
+        };
+
+        PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+    }
+
+    public void OnTeamChanged()
+    {
+        SelectTeam(teamDropdown.value);
     }
 }

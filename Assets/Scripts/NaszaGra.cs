@@ -17,4 +17,6 @@ public class NaszaGra
 
     // Player's custom properties (Photon Network)
     public const string CHARACTER_ID = "CharacterID";
+
+    public const string TEAM_ID = "TeamID";
 }

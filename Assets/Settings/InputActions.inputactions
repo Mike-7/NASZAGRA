@@ -19,7 +19,7 @@
                     "id": "0cabd85c-936c-4e81-8516-7f1eaf99a385",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "Press"
                 },
                 {
                     "name": "Attack2",
@@ -27,7 +27,7 @@
                     "id": "f26d6cf8-8011-438b-b807-e752073a8409",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "Press"
                 },
                 {
                     "name": "Attack3",
@@ -35,7 +35,7 @@
                     "id": "3657a1e6-c09e-4fee-a082-176efbf1b935",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "Press"
                 }
             ],
             "bindings": [

@@ -36,9 +36,9 @@ public class PlayersManager : MonoBehaviourPunCallbacks
             GameObject offlinePlayerGameObject = Instantiate(playerPrefab, Vector3.zero, Quaternion.Euler(0, 0, 0));
             cameraFollow.SetPlayer(offlinePlayerGameObject.transform);
             Player offlinePlayer = offlinePlayerGameObject.GetComponent<Player>();
-            offlinePlayer.isPlayable = true;
+            offlinePlayerGameObject.GetComponent<PlayerControls>().enabled = true;
             offlinePlayer.SetNickName(NaszaGra.DEFAULT_NICK_NAME);
-            playerInfo.SetPlayer(offlinePlayer);
+            playerInfo.SetPlayer(offlinePlayerGameObject.GetComponent<PlayerControls>());
 
             return;
         }
@@ -47,10 +47,10 @@ public class PlayersManager : MonoBehaviourPunCallbacks
         var playerGameObject = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.Euler(0, 0, 0));
         cameraFollow.SetPlayer(playerGameObject.transform);
         Player player = playerGameObject.GetComponent<Player>();
-        player.isPlayable = true;
+        playerGameObject.GetComponent<PlayerControls>().enabled = true;
         PhotonView photonView = PhotonView.Get(player);
         photonView.RPC("SetNickName", RpcTarget.All, PhotonNetwork.NickName);
-        playerInfo.SetPlayer(player);
+        playerInfo.SetPlayer(playerGameObject.GetComponent<PlayerControls>());
     }
 
     public IEnumerator Respawn(int teamID)

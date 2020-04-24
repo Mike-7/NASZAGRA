@@ -27,15 +27,25 @@ public class SlotsManager : MonoBehaviourPunCallbacks
             CreateSlot(playerList[i].ActorNumber);
 
             Slot slot = GetSlot(playerList[i].ActorNumber);
-            slot.SetNickName(playerList[i].NickName);
+
+            if(playerList[i].CustomProperties.ContainsKey(NaszaGra.TEAM_ID))
+            {
+                string teamName = NaszaGra.GetTeamName((int)playerList[i].CustomProperties[NaszaGra.TEAM_ID]);
+                string nickName = string.Format("{0}\n({1})", playerList[i].NickName, teamName);
+                slot.SetNickName(nickName);
+            }
+            else
+            {
+                slot.SetNickName(playerList[i].NickName);
+            }
+
             if (playerList[i].CustomProperties.ContainsKey(NaszaGra.CHARACTER_ID))
             {
                 slot.Select((int)playerList[i].CustomProperties[NaszaGra.CHARACTER_ID]);
             }
         }
 
-        // Select "Zabawa" team
-        SelectTeam(0);
+        SelectTeam(teamDropdown.value);
     }
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
@@ -62,8 +72,16 @@ public class SlotsManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, Hashtable changedProps)
     {
+        object teamID;
+        if (changedProps.TryGetValue(NaszaGra.TEAM_ID, out teamID) && teamID != null)
+        {
+            string teamName = NaszaGra.GetTeamName((int)teamID);
+            Slot slot2 = GetSlot(targetPlayer.ActorNumber);
+            slot2.SetNickName(string.Format("{0}\n({1})", targetPlayer.NickName, teamName));
+        }
+
         // Ignore changes for local player
-        if(targetPlayer.ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
+        if (targetPlayer.ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
         {
             return;
         }
@@ -157,6 +175,52 @@ public class SlotsManager : MonoBehaviourPunCallbacks
 
     void SelectTeam(int teamID)
     {
+        // TO DO FIX THIS
+        bool CanJoinZabawa = false;
+        bool CanJoinNudy = false;
+        var players = PhotonNetwork.PlayerList;
+        foreach(var player in players)
+        {
+            if(players.Length <= 1)
+            {
+                CanJoinZabawa = true;
+                CanJoinNudy = true;
+                break;
+            }
+
+            if(player.ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
+            {
+                continue;
+            }
+
+            if(!player.CustomProperties.ContainsKey(NaszaGra.TEAM_ID))
+            {
+                CanJoinZabawa = true;
+                CanJoinNudy = true;
+                break;
+            }
+
+            if((int)player.CustomProperties[NaszaGra.TEAM_ID] == 0)
+            {
+                CanJoinNudy = true;
+            }
+            else if ((int)player.CustomProperties[NaszaGra.TEAM_ID] == 1)
+            {
+                CanJoinZabawa = true;
+            }
+        }
+
+        if (teamID == 1 && !CanJoinNudy)
+        {
+            teamDropdown.value = 0;
+            return;
+        }
+        else if (teamID == 0 && !CanJoinZabawa)
+        {
+            teamDropdown.value = 1;
+            return;
+        }
+
         Hashtable props = new Hashtable
         {
             { NaszaGra.TEAM_ID, teamID }

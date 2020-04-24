@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Photon.Pun;
+using TMPro;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(Animator))]
@@ -10,6 +11,7 @@ using Photon.Pun;
 [RequireComponent(typeof(AudioSource))]
 public class Player : MonoBehaviour
 {
+    public GameObject nickNamePrefab;
     public GameObject smokePrefab;
     public GameObject speakerPrefab;
     public GameObject toilerPrefab;
@@ -51,6 +53,12 @@ public class Player : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
 
         rotation = Quaternion.Euler(0, 0, 0);
+        attack1TimeStamp = Time.time;
+        attack2TimeStamp = Time.time;
+        attack3TimeStamp = Time.time;
+
+        nickNamePrefab = Instantiate(nickNamePrefab);
+        nickNamePrefab.GetComponent<RotateTowardCamera>().SetTarget(transform);
     }
 
     void Update()
@@ -157,8 +165,20 @@ public class Player : MonoBehaviour
         {
             attack2TimeStamp = Time.time;
 
+#if UNITY_EDITOR
+            if (!PhotonNetwork.InRoom)
+            {
+                PlayersEffects._instance.AddEffect("stun", PhotonNetwork.LocalPlayer.ActorNumber);
+            }
+            else
+            {
+                PhotonView photonView = PhotonView.Get(PlayersEffects._instance);
+                photonView.RPC("AddEffect", RpcTarget.All, "stun", PhotonNetwork.LocalPlayer.ActorNumber);
+            }
+#else
             PhotonView photonView = PhotonView.Get(PlayersEffects._instance);
             photonView.RPC("AddEffect", RpcTarget.All, "stun", PhotonNetwork.LocalPlayer.ActorNumber);
+#endif
 
             Vector3 offset = new Vector3(1, 5, 1);
 #if UNITY_EDITOR
@@ -201,6 +221,12 @@ public class Player : MonoBehaviour
                 (int)PhotonNetwork.LocalPlayer.CustomProperties[NaszaGra.TEAM_ID]));
 
         PhotonNetwork.Destroy(gameObject);
+    }
+
+    [PunRPC]
+    public void SetNickName(string nickName)
+    {
+        nickNamePrefab.GetComponent<TextMeshPro>().text = nickName;
     }
 
     [PunRPC]

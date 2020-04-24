@@ -19,4 +19,18 @@ public class NaszaGra
     public const string CHARACTER_ID = "CharacterID";
 
     public const string TEAM_ID = "TeamID";
+
+    public static string GetTeamName(int teamID)
+    {
+        switch(teamID)
+        {
+            case 0:
+                return "Zabawa";
+
+            case 1:
+                return "Nudy";
+        }
+
+        return null;
+    }
 }

@@ -219,7 +219,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4468480198767874472}
+  - {fileID: 4468480198767874475}
   - {fileID: 4512898214643540867}
   - {fileID: 361091225611639149}
   - {fileID: 5820038581625827504}
@@ -275,6 +275,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dcf239f3feaff7499b8ef0bd151fc28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nickNamePrefab: {fileID: 7796680074182460635, guid: a7a940217810c9f4dab674a3b9da5799,
+    type: 3}
   smokePrefab: {fileID: 1821158616718314243, guid: 6b009352eb72f6c40892e0d2505b9193,
     type: 3}
   speakerPrefab: {fileID: 8984755865512627264, guid: eabdfa43951e50c4f8a8e631b61b48be,
@@ -294,7 +296,7 @@ MonoBehaviour:
   attack3TimeStamp: 0
   smokeDamageCooldown: 0.5
   smokeDamageTimestamp: 0
-  smokeParticle: {fileID: 4468480198767874378}
+  smokeParticle: {fileID: 4468480198767874383}
 --- !u!114 &5265468342530240626
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1272,13 +1274,13 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: -8616322209613589950, guid: 6b009352eb72f6c40892e0d2505b9193, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 6b009352eb72f6c40892e0d2505b9193, type: 3}
---- !u!198 &4468480198767874378 stripped
+--- !u!198 &4468480198767874383 stripped
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 1821158616718314241, guid: 6b009352eb72f6c40892e0d2505b9193,
     type: 3}
   m_PrefabInstance: {fileID: 4468480198767874265}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &4468480198767874472 stripped
+--- !u!4 &4468480198767874475 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1821158616718314240, guid: 6b009352eb72f6c40892e0d2505b9193,
     type: 3}

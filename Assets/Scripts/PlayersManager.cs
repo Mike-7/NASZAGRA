@@ -37,6 +37,7 @@ public class PlayersManager : MonoBehaviourPunCallbacks
             cameraFollow.SetPlayer(offlinePlayerGameObject.transform);
             Player offlinePlayer = offlinePlayerGameObject.GetComponent<Player>();
             offlinePlayer.isPlayable = true;
+            offlinePlayer.SetNickName(NaszaGra.DEFAULT_NICK_NAME);
             playerInfo.SetPlayer(offlinePlayer);
 
             return;
@@ -47,6 +48,8 @@ public class PlayersManager : MonoBehaviourPunCallbacks
         cameraFollow.SetPlayer(playerGameObject.transform);
         Player player = playerGameObject.GetComponent<Player>();
         player.isPlayable = true;
+        PhotonView photonView = PhotonView.Get(player);
+        photonView.RPC("SetNickName", RpcTarget.All, PhotonNetwork.NickName);
         playerInfo.SetPlayer(player);
     }
 

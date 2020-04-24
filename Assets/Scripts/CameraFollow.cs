@@ -37,9 +37,6 @@ public class CameraFollow : MonoBehaviour
             distance = minDistance;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
-            Shake();
-
         offset = new Vector3(-distance / 2, distance, distance / 2);
     }
 

@@ -12,7 +12,7 @@ public class PlayersManager : MonoBehaviourPunCallbacks
     public GameObject playerPrefab;
     public PlayerInfo playerInfo;
 
-    List<GameObject> players;
+    new PhotonView photonView;
 
     void Start()
     {
@@ -23,52 +23,36 @@ public class PlayersManager : MonoBehaviourPunCallbacks
         else
         {
             Destroy(this);
+            return;
         }
+
+        photonView = GetComponent<PhotonView>();
 
         Spawn();
     }
 
     void Spawn()
     {
-#if UNITY_EDITOR
-        if (!PhotonNetwork.InRoom)
+        if(!PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey(NaszaGra.TEAM_ID))
         {
-            GameObject offlinePlayerGameObject = Instantiate(playerPrefab, Vector3.zero, Quaternion.Euler(0, 0, 0));
-            cameraFollow.SetPlayer(offlinePlayerGameObject.transform);
-            Player offlinePlayer = offlinePlayerGameObject.GetComponent<Player>();
-            offlinePlayerGameObject.GetComponent<PlayerControls>().enabled = true;
-            offlinePlayer.SetNickName(NaszaGra.DEFAULT_NICK_NAME, (int)PhotonNetwork.LocalPlayer.CustomProperties[NaszaGra.TEAM_ID]);
-            playerInfo.SetPlayer(offlinePlayerGameObject.GetComponent<PlayerControls>());
-
-            return;
+            PhotonNetwork.LocalPlayer.CustomProperties[NaszaGra.TEAM_ID] = 0;
         }
-#endif
 
         var playerGameObject = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.Euler(0, 0, 0));
-        cameraFollow.SetPlayer(playerGameObject.transform);
         Player player = playerGameObject.GetComponent<Player>();
-        playerGameObject.GetComponent<PlayerControls>().enabled = true;
+        PlayerControls playerControls = playerGameObject.GetComponent<PlayerControls>();
         PhotonView photonView = PhotonView.Get(player);
-        photonView.RPC("SetNickName", RpcTarget.All, PhotonNetwork.NickName, (int)PhotonNetwork.LocalPlayer.CustomProperties[NaszaGra.TEAM_ID]);
+
+        cameraFollow.SetPlayer(playerGameObject.transform);
         playerInfo.SetPlayer(playerGameObject.GetComponent<PlayerControls>());
+        playerControls.enabled = true;
+        photonView.RPC("SetNickName", RpcTarget.All, PhotonNetwork.NickName,
+            (int)PhotonNetwork.LocalPlayer.CustomProperties[NaszaGra.TEAM_ID]);
     }
 
     public IEnumerator Respawn(int teamID)
     {
-#if UNITY_EDITOR
-            if (!PhotonNetwork.InRoom)
-            {
-                scoreManager.AddPointsToTeam(teamID, -10);
-            }
-            else
-            {
-                PhotonView photonView = PhotonView.Get(this);
-                photonView.RPC("AddPointsToTeam", RpcTarget.All, teamID, -10);
-            }
-#else
-        PhotonView photonView = PhotonView.Get(this);
         photonView.RPC("AddPointsToTeam", RpcTarget.All, teamID, -10);
-#endif
 
         if (scoreManager.CanRespawn(teamID))
         {

@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     public ParticleSystem smokeParticle;
 
     public int health = 100;
+    public int teamID = 0;
     public float smokeDamageCooldown = 0.5f;
     public float smokeDamageTimestamp = 0;
 
@@ -57,9 +58,17 @@ public class Player : MonoBehaviour
     }
 
     [PunRPC]
-    public void SetNickName(string nickName)
+    public void SetNickName(string nickName, int teamID)
     {
-        nickNameText.GetComponent<TextMeshPro>().text = nickName;
+        this.teamID = teamID;
+
+        nickNameText.GetComponent<TextMeshPro>().text = "";
+        if (teamID == 0)
+        {
+            nickNameText.GetComponent<TextMeshPro>().text += "<color=\"orange\">";
+        }
+
+        nickNameText.GetComponent<TextMeshPro>().text += nickName;
     }
 
     [PunRPC]
@@ -113,6 +122,16 @@ public class Player : MonoBehaviour
         if (other.transform.parent == transform)
         {
             return;
+        }
+
+        var player = other.transform.parent.GetComponent<Player>();
+        if (player != null)
+        {
+            if(player.teamID == teamID)
+            {
+                // Same team (No damage)
+                return;
+            }
         }
 
         if (Time.time - smokeDamageTimestamp >= smokeDamageCooldown)

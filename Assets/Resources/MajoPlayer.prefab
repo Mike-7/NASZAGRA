@@ -220,7 +220,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 2829726267472747481}
+  - {fileID: 4468480198767874475}
   - {fileID: 4512898214643540867}
   - {fileID: 361091225611639149}
   - {fileID: 5820038581625827504}
@@ -303,7 +303,7 @@ MonoBehaviour:
     type: 3}
   toilerPrefab: {fileID: 8766419039749422613, guid: b6cfda4d02ee7864492506527ab201bf,
     type: 3}
-  smokeParticle: {fileID: 2829726267472747480}
+  smokeParticle: {fileID: 4468480198767874383}
   health: 100
   teamID: 0
   smokeDamageCooldown: 0.5
@@ -1285,13 +1285,13 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: -8616322209613589950, guid: 6b009352eb72f6c40892e0d2505b9193, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 6b009352eb72f6c40892e0d2505b9193, type: 3}
---- !u!4 &2829726267472747481 stripped
+--- !u!4 &4468480198767874475 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1821158616718314240, guid: 6b009352eb72f6c40892e0d2505b9193,
     type: 3}
   m_PrefabInstance: {fileID: 4468480198767874265}
   m_PrefabAsset: {fileID: 0}
---- !u!198 &2829726267472747480 stripped
+--- !u!198 &4468480198767874383 stripped
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 1821158616718314241, guid: 6b009352eb72f6c40892e0d2505b9193,
     type: 3}

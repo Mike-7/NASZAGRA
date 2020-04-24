@@ -9,6 +9,7 @@ public class AutoDestroy : MonoBehaviour
     float timeStamp;
 
     bool isNetworkObject = true;
+    PhotonView photonView;
 
     void Start()
     {
@@ -27,6 +28,11 @@ public class AutoDestroy : MonoBehaviour
             isNetworkObject = false;
             Destroy(gameObject, timer);
         }
+
+        if(isNetworkObject)
+        {
+            photonView = PhotonView.Get(this);
+        }
     }
 
     void Update()
@@ -37,6 +43,11 @@ public class AutoDestroy : MonoBehaviour
             return;
         }
 #endif
+
+        if(photonView.OwnerActorNr != PhotonNetwork.LocalPlayer.ActorNumber)
+        {
+            return;
+        }
 
         if(isNetworkObject && Time.time - timeStamp >= timer)
         {

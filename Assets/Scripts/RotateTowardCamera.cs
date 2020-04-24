@@ -7,13 +7,11 @@ public class RotateTowardCamera : MonoBehaviour
     public Transform target;
     public Vector3 offset;
 
-    public float lerpSpeed = 5f;
-
     void Start()
     {
         transform.rotation = Camera.main.transform.rotation;
     }
-    void FixedUpdate()
+    void LateUpdate()
     {
         if(target == null)
         {
@@ -21,7 +19,7 @@ public class RotateTowardCamera : MonoBehaviour
         }
 
         Vector3 desiredPosition = target.position + offset;
-        transform.position = Vector3.Lerp(transform.position, desiredPosition, lerpSpeed * Time.deltaTime);
+        transform.position = desiredPosition;
     }
 
     public void SetTarget(Transform target)

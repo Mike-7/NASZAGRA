@@ -41,11 +41,12 @@ public class Player : MonoBehaviour
     Animator animator;
     DamageAnimation damageAnimation;
     AudioSource audioSource;
+    GameObject nickNameText;
 
     Vector3 moveDir = Vector3.zero;
     Quaternion rotation;
 
-    void Start()
+    void Awake()
     {
         characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
@@ -57,8 +58,8 @@ public class Player : MonoBehaviour
         attack2TimeStamp = Time.time;
         attack3TimeStamp = Time.time;
 
-        nickNamePrefab = Instantiate(nickNamePrefab);
-        nickNamePrefab.GetComponent<RotateTowardCamera>().SetTarget(transform);
+        nickNameText = Instantiate(nickNamePrefab);
+        nickNameText.GetComponent<RotateTowardCamera>().SetTarget(transform);
     }
 
     void Update()
@@ -100,6 +101,11 @@ public class Player : MonoBehaviour
         transform.position = new Vector3(transform.position.x, 0, transform.position.z);
         transform.localRotation = Quaternion.Lerp(transform.localRotation,
             rotation, rotationSpeed * Time.deltaTime);
+    }
+
+    void OnDestroy()
+    {
+        Destroy(nickNameText);
     }
 
     float AngleBetweenTwoPoints(Vector3 a, Vector3 b)
@@ -226,7 +232,7 @@ public class Player : MonoBehaviour
     [PunRPC]
     public void SetNickName(string nickName)
     {
-        nickNamePrefab.GetComponent<TextMeshPro>().text = nickName;
+        nickNameText.GetComponent<TextMeshPro>().text = nickName;
     }
 
     [PunRPC]

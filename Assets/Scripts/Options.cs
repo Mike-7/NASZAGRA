@@ -22,6 +22,8 @@ public class Options : MonoBehaviour
 
     string currentNickName;
 
+    public Button a;
+
     void Start()
     {
         Application.targetFrameRate = 60;

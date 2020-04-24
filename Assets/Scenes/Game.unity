@@ -1697,7 +1697,7 @@ MonoBehaviour:
   player: {fileID: 0}
   distance: 10
   minDistance: 6
-  maxDistance: 15
+  maxDistance: 12
   lerpSpeed: 6
   scrollSpeed: 100
   shakeDuration: 0.25

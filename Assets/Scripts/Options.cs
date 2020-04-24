@@ -24,6 +24,8 @@ public class Options : MonoBehaviour
 
     void Start()
     {
+        Application.targetFrameRate = 60;
+
         currentNickName = networkManager.GetNickName();
         nickNameInputField.text = currentNickName;
 

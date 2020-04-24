@@ -236,6 +236,12 @@ public class Player : MonoBehaviour
     }
 
     [PunRPC]
+    public void PlayDamageSound()
+    {
+        audioSource.Play();
+    }
+
+    [PunRPC]
     public void PlayDamageAnimation()
     {
         damageAnimation.OnDamage();
@@ -244,7 +250,20 @@ public class Player : MonoBehaviour
     public void TakeDamage(int damageValue)
     {
         Camera.main.GetComponent<CameraFollow>().Shake();
-        audioSource.Play();
+#if UNITY_EDITOR
+        if (!PhotonNetwork.InRoom)
+        {
+            PlayDamageSound();
+        }
+        else
+        {
+            PhotonView photonView2 = PhotonView.Get(this);
+            photonView2.RPC("PlayDamageSound", RpcTarget.All);
+        }
+#else
+        PhotonView photonView2 = PhotonView.Get(this);
+        photonView2.RPC("PlayDamageSound", RpcTarget.All);
+#endif
 
         health -= damageValue;
         if (health <= 0)

@@ -12,6 +12,8 @@ public class PlayersManager : MonoBehaviourPunCallbacks
     public GameObject playerPrefab;
     public PlayerInfo playerInfo;
 
+    List<GameObject> players;
+
     void Start()
     {
         if(_instance == null)

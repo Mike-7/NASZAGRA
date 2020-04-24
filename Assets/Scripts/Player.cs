@@ -7,6 +7,7 @@ using Photon.Pun;
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(DamageAnimation))]
+[RequireComponent(typeof(AudioSource))]
 public class Player : MonoBehaviour
 {
     public GameObject smokePrefab;
@@ -16,6 +17,7 @@ public class Player : MonoBehaviour
     public bool isPlayable = false;
 
     public float speed = 8f;
+    public float stunSpeed = 0.5f;
     public float rotationSpeed = 5f;
     public int health = 100;
 
@@ -36,6 +38,7 @@ public class Player : MonoBehaviour
     CharacterController characterController;
     Animator animator;
     DamageAnimation damageAnimation;
+    AudioSource audioSource;
 
     Vector3 moveDir = Vector3.zero;
     Quaternion rotation;
@@ -45,6 +48,7 @@ public class Player : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         damageAnimation = GetComponent<DamageAnimation>();
+        audioSource = GetComponent<AudioSource>();
 
         rotation = Quaternion.Euler(0, 0, 0);
     }
@@ -57,7 +61,6 @@ public class Player : MonoBehaviour
         }
 
         rotation = GetRotationTowardsMouse();
-
         animator.SetBool("walking", moveDir != Vector3.zero);
     }
 
@@ -68,7 +71,24 @@ public class Player : MonoBehaviour
             return;
         }
 
-        characterController.Move(moveDir * speed * Time.deltaTime);
+        bool stun = false;
+        var effects = PlayersEffects._instance.GetActiveEffects(PhotonNetwork.LocalPlayer.ActorNumber);
+        foreach (var effect in effects)
+        {
+            if (effect.effectName == "stun")
+            {
+                stun = true;
+            }
+        }
+
+        if(stun)
+        {
+            characterController.Move(moveDir * stunSpeed * Time.deltaTime);
+        }
+        else
+        {
+            characterController.Move(moveDir * speed * Time.deltaTime);
+        }
         transform.position = new Vector3(transform.position.x, 0, transform.position.z);
         transform.localRotation = Quaternion.Lerp(transform.localRotation,
             rotation, rotationSpeed * Time.deltaTime);
@@ -137,6 +157,9 @@ public class Player : MonoBehaviour
         {
             attack2TimeStamp = Time.time;
 
+            PhotonView photonView = PhotonView.Get(PlayersEffects._instance);
+            photonView.RPC("AddEffect", RpcTarget.All, "stun", PhotonNetwork.LocalPlayer.ActorNumber);
+
             Vector3 offset = new Vector3(1, 5, 1);
 #if UNITY_EDITOR
             if (!PhotonNetwork.InRoom)
@@ -166,28 +189,18 @@ public class Player : MonoBehaviour
         }
     }
 
-    [PunRPC]
-    public void DestroyPlayer()
-    {
-        Destroy(gameObject);
-    }
-
     void Die()
     {
+        if(!PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey(NaszaGra.TEAM_ID))
+        {
+            PhotonNetwork.LocalPlayer.CustomProperties[NaszaGra.TEAM_ID] = 0;
+        }
+
         PlayersManager._instance.StartCoroutine(
             PlayersManager._instance.Respawn(
                 (int)PhotonNetwork.LocalPlayer.CustomProperties[NaszaGra.TEAM_ID]));
 
-#if UNITY_EDITOR
-        if(!PhotonNetwork.InRoom)
-        {
-            DestroyPlayer();
-            return;
-        }
-#endif
-
-        PhotonView photonView = PhotonView.Get(this);
-        photonView.RPC("DestroyPlayer", RpcTarget.All);
+        PhotonNetwork.Destroy(gameObject);
     }
 
     [PunRPC]
@@ -198,6 +211,9 @@ public class Player : MonoBehaviour
 
     public void TakeDamage(int damageValue)
     {
+        Camera.main.GetComponent<CameraFollow>().Shake();
+        audioSource.Play();
+
         health -= damageValue;
         if (health <= 0)
         {

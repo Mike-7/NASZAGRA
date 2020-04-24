@@ -1700,6 +1700,8 @@ MonoBehaviour:
   maxDistance: 15
   lerpSpeed: 6
   scrollSpeed: 100
+  shakeDuration: 0.25
+  shakeAmount: 1
 --- !u!20 &1687258584
 Camera:
   m_ObjectHideFlags: 0
@@ -1800,6 +1802,7 @@ GameObject:
   - component: {fileID: 1716040543}
   - component: {fileID: 1716040544}
   - component: {fileID: 1716040545}
+  - component: {fileID: 1716040547}
   - component: {fileID: 1716040546}
   m_Layer: 0
   m_Name: GameManager
@@ -1888,6 +1891,18 @@ MonoBehaviour:
   viewIdField: 1
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &1716040547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1716040541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e42f1fddd3bbc2040a569191c50bdf3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2016342276
 GameObject:
   m_ObjectHideFlags: 0

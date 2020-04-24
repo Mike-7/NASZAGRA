@@ -13,6 +13,10 @@ public class CameraFollow : MonoBehaviour
     public float lerpSpeed = 5f;
     public float scrollSpeed = 50f;
 
+    public float shakeDuration = 0.5f;
+    float shakeTimeStamp = 0;
+    public float shakeAmount = 0.7f;
+
     Vector3 offset;
 
     void Start()
@@ -33,6 +37,9 @@ public class CameraFollow : MonoBehaviour
             distance = minDistance;
         }
 
+        if (Input.GetKeyDown(KeyCode.Space))
+            Shake();
+
         offset = new Vector3(-distance / 2, distance, distance / 2);
     }
 
@@ -42,11 +49,22 @@ public class CameraFollow : MonoBehaviour
             return;
 
         Vector3 desiredPosition = player.position + offset;
+
+        if(Time.time > shakeDuration && Time.time - shakeTimeStamp < shakeDuration)
+        {
+            desiredPosition += Random.insideUnitSphere * shakeAmount;
+        }
+
         transform.position =  Vector3.Lerp(transform.position, desiredPosition, lerpSpeed * Time.deltaTime);
     }
 
     public void SetPlayer(Transform player)
     {
         this.player = player;
+    }
+
+    public void Shake()
+    {
+        shakeTimeStamp = Time.time;
     }
 }

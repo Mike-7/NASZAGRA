@@ -23,21 +23,21 @@ public class PlayerInfo : MonoBehaviour
         {
             attack1 = 0;
         }
-        attack1 = Mathf.Round(attack1 * 10f) / 10f;
+        attack1 = attack1 * 10f / 10f;
 
         float attack2 = -(Time.time - player.attack2TimeStamp - player.attack2Cooldown);
         if (attack2 <= 0)
         {
             attack2 = 0;
         }
-        attack2 = Mathf.Round(attack2 * 10f) / 10f;
+        attack2 = attack2 * 10f / 10f;
 
         float attack3 = -(Time.time - player.attack3TimeStamp - player.attack3Cooldown);
         if (attack3 <= 0)
         {
             attack3 = 0;
         }
-        attack3 = Mathf.Round(attack3 * 10f) / 10f;
+        attack3 = attack3 * 10f / 10f;
 
         playerInfoText.text = string.Format(
             "Zycie: {0}               At1: {1}s               At2: {2}s               Special: {3}s",

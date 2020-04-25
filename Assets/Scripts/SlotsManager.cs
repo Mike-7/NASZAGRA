@@ -45,6 +45,8 @@ public class SlotsManager : MonoBehaviourPunCallbacks
             }
         }
 
+        // Select "Majo" character as default
+        Select(0);
         SelectTeam(teamDropdown.value);
     }
 

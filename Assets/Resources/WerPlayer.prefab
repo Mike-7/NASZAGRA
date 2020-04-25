@@ -721,7 +721,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 2434781211069019193}
+  - {fileID: 4074660901711740581}
   - {fileID: 6349700490109420664}
   - {fileID: 7824790799178221909}
   m_Father: {fileID: 0}
@@ -988,7 +988,7 @@ MonoBehaviour:
     type: 3}
   toilerPrefab: {fileID: 8766419039749422613, guid: b6cfda4d02ee7864492506527ab201bf,
     type: 3}
-  smokeParticle: {fileID: 2434781211069019200}
+  smokeParticle: {fileID: 4074660901711740580}
   health: 100
   teamID: 0
   smokeDamageCooldown: 0.5
@@ -1201,7 +1201,7 @@ SkinnedMeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7418914103300468076}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 2
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
@@ -1597,13 +1597,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6b009352eb72f6c40892e0d2505b9193, type: 3}
---- !u!198 &2434781211069019200 stripped
+--- !u!198 &4074660901711740580 stripped
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 1821158616718314241, guid: 6b009352eb72f6c40892e0d2505b9193,
     type: 3}
   m_PrefabInstance: {fileID: 2434781211069019557}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &2434781211069019193 stripped
+--- !u!4 &4074660901711740581 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1821158616718314240, guid: 6b009352eb72f6c40892e0d2505b9193,
     type: 3}

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
@@ -40,6 +41,8 @@ public class CameraFollow : MonoBehaviour
         offset = new Vector3(-distance / 2, distance, distance / 2);
     }
 
+    public float gowno = 2.5f;
+
     void FixedUpdate()
     {
         if (player == null)
@@ -52,7 +55,8 @@ public class CameraFollow : MonoBehaviour
             desiredPosition += Random.insideUnitSphere * shakeAmount;
         }
 
-        transform.position =  Vector3.Lerp(transform.position, desiredPosition, lerpSpeed * Time.deltaTime);
+        Vector3 lerpedPosition = Vector3.Lerp(transform.position, desiredPosition, lerpSpeed * Time.deltaTime);
+        transform.position = lerpedPosition;
     }
 
     public void SetPlayer(Transform player)

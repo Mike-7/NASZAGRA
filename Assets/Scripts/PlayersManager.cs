@@ -10,6 +10,7 @@ public class PlayersManager : MonoBehaviourPunCallbacks
     public ScoreManager scoreManager;
     public CameraFollow cameraFollow;
     public GameObject playerPrefab;
+    public GameObject playerPrefab2;
     public PlayerInfo playerInfo;
 
     new PhotonView photonView;
@@ -37,8 +38,22 @@ public class PlayersManager : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.LocalPlayer.CustomProperties[NaszaGra.TEAM_ID] = 0;
         }
+        if(!PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey(NaszaGra.CHARACTER_ID))
+        {
+            PhotonNetwork.LocalPlayer.CustomProperties[NaszaGra.CHARACTER_ID] = 0;
+        }
 
-        var playerGameObject = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.Euler(0, 0, 0));
+        GameObject playerGameObject;
+
+        if((int)PhotonNetwork.LocalPlayer.CustomProperties[NaszaGra.CHARACTER_ID] == 0)
+        {
+            playerGameObject = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.Euler(0, 0, 0));
+        }
+        else
+        {
+            playerGameObject = PhotonNetwork.Instantiate(playerPrefab2.name, Vector3.zero, Quaternion.Euler(0, 0, 0));
+        }
+
         Player player = playerGameObject.GetComponent<Player>();
         PlayerControls playerControls = playerGameObject.GetComponent<PlayerControls>();
         PhotonView photonView = PhotonView.Get(player);

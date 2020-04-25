@@ -1842,6 +1842,8 @@ MonoBehaviour:
   cameraFollow: {fileID: 1687258583}
   playerPrefab: {fileID: 3770738270420621854, guid: 22c7d2d3864fa2648bdfedb4b3ab34dc,
     type: 3}
+  playerPrefab2: {fileID: 5975143704374967781, guid: 49424badcb9dd624f869b5c15b5d0f08,
+    type: 3}
   playerInfo: {fileID: 1716040544}
 --- !u!114 &1716040544
 MonoBehaviour:

@@ -10,7 +10,6 @@ using TMPro;
 public class Player : MonoBehaviour
 {
     public GameObject nickNamePrefab;
-    public GameObject smokePrefab;
     public GameObject speakerPrefab;
     public GameObject toilerPrefab;
     public ParticleSystem smokeParticle;
